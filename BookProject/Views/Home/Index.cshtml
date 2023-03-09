@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Book Application</h1>
+    
+</div>
+
+
+@section Scripts{
+
+
+    @*PopSuccessFunction*@
+
+    <script type="text/javascript">
+
+        function openSuccessModal(strMessage) {
+            var myDiv = document.getElementById("MyModelSuccessAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#successPopup').modal('show');
+        }
+
+        $(document).ready(function () {
+            var msg = "@TempData["SuccessMessage"]";
+            if (msg)
+                openSuccessModal(msg);
+        });
+
+    </script>
+
+    @*PopErrorFunction*@
+
+    <script type="text/javascript">
+
+        function openErrorModal(strMessage) {
+            var myDiv = document.getElementById("MyModelErrorAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#errorPopup').modal('show');
+        }
+
+        $(document).ready(function () {
+            var msg = "@TempData["ErrorMessage"]";
+            if (msg)
+                openSuccessModal(msg);
+        });
+
+    </script>
+
+
+}

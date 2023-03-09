@@ -1,0 +1,104 @@
+﻿@model SharedLibrary.Models.BookModel;
+
+
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="deletePartial-@Model.BookId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("Delete","Book", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+            
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel"> <i class="fas fa-exclamation-triangle"></i> Are You Sure to Delete this Book? </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form asp-action="Delete" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="BookId" value="@Model.BookId">
+                        <input type="hidden" asp-for="BookName" value="@Model.BookName">
+                        <input type="hidden" asp-for="CategoryName" value="@Model.CategoryName">
+                        <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId">
+                        <input type="hidden" asp-for="Author" value="@Model.Author">
+                        <input type="hidden" asp-for="Publisher" value="@Model.Publisher">
+                        <input type="hidden" asp-for="Price" value="@Model.Price">
+                      
+                        @*
+                        <input type="hidden" asp-for="Author" value="@Model.Author">
+                        <input type="hidden" asp-for="Publisher" value="@Model.BookName">
+                        <input type="hidden" asp-for="Price" value="@Model.Price">*@
+                        <div class="text-danger"></div>
+                        <div class="form-group">
+                           
+                         <div class="row">
+                         <div class="text-center">
+                          <h3 class="text-info"></h3>
+                         </div>
+ 
+                        <dl class="row">
+
+                         <dt class = "col-sm-4">
+                             @Html.DisplayNameFor(model => model.BookId)
+                         </dt>
+                         <dd class = "col-sm-8">
+                            @Html.DisplayFor(model => model.BookId)
+                        </dd>
+
+                        <dt class = "col-sm-4">
+                            @Html.DisplayNameFor(model => model.BookName)
+                        </dt>
+                        <dd class = "col-sm-8">
+                            @Html.DisplayFor(model => model.BookName)
+                        </dd>
+
+                      <dt class="col-sm-4">
+                            @Html.HiddenFor(model => model.CategoryId)
+                       </dt>
+                      <dd class="col-sm-8">
+                            @Html.HiddenFor(model => model.CategoryId)
+                      </dd>
+
+                        <dt class = "col-sm-4">
+                            @Html.DisplayNameFor(model => model.CategoryName)
+                       </dt>
+                       <dd class = "col-sm-8">
+                            @Html.DisplayFor(model => model.CategoryName)
+                       </dd>
+
+                         <dt class = "col-sm-4">
+                              @Html.DisplayNameFor(model => model.Author)
+                        </dt>
+                         <dd class = "col-sm-8">
+                             @Html.DisplayFor(model => model.Author)
+                        </dd>
+
+                        <dt class = "col-sm-4">
+                            @Html.DisplayNameFor(model => model.Publisher)
+                        </dt>
+                        <dd class = "col-sm-8">
+                            @Html.DisplayFor(model => model.Publisher)
+                         </dd>
+
+                           <dt class = "col-sm-4">
+                            @Html.DisplayNameFor(model => model.Price)
+                            </dt>
+                             <dd class = "col-sm-8">
+                             @Html.DisplayFor(model => model.Price)
+                              </dd>
+
+                     </dl>
+                   </div>
+                   </div>         
+                        <div class="form-group">
+                            <button type="submit" asp-action="Delete" asp-controller="Book" class="btn btn-danger"> <i class="fas fa-trash-alt"></i> Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>

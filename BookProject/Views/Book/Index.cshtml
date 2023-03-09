@@ -1,0 +1,155 @@
+﻿@using SharedLibrary.Models
+@model IEnumerable<SharedLibrary.Models.BookModel>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<p>
+
+    <a asp-action="Create"> <button class="btn btn-primary"> <i class="far fa-edit"> </i> Create Book</button> </a>
+    <div class="form-group">
+        @Html.Label("Category")
+        @Html.DropDownList("category", new SelectList(ViewBag.Categories,"Value","Text"), new { @class= "form-control", onchange = "document.location.href = '/Book?catId=' + this.options[this.selectedIndex].value;"})
+    </div>
+
+<br/>
+    
+    
+    
+</p>
+<table id="myTable" class="table table-bordered table-hover table-sm">
+
+    <thead>
+        <tr>
+            <th width="80px">
+                @Html.DisplayNameFor(model => model.BookId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+
+            <th data-sortable="false" width="300px"> Operations</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.BookId" > <button class="btn btn-success"> <i class="fas fa-edit"></i>Edit</button></a>
+
+                    <button type="button" asp-action="Details" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="@("#detailsPartial-" +item.BookId)" data-url="@Url.Action($"Details/{item.BookId}")"> <i class="fas fa-file-alt"></i> Details </button>
+                    @await Html.PartialAsync("_DetailsPartialView",item)
+
+                    <button type="button" asp-action="Delete" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="@("#deletePartial-" +item.BookId)" data-url="@Url.Action($"Delete/{item.BookId}")"> <i class="fas fa-trash-alt"></i> Delete </button>
+                    @await Html.PartialAsync("_DeletePartialView",item)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+@section Scripts{
+
+
+@*<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+  
+</script>*@
+
+  @*PopSuccessFunction*@
+  
+<script type="text/javascript">
+        
+        function openSuccessModal(strMessage) 
+        {
+            var myDiv= document.getElementById("MyModelSuccessAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#successPopup').modal('show');
+        }
+
+        $(document).ready(function()
+        {
+            var msg= "@TempData["SuccessMessage"]";
+            if(msg)
+            openSuccessModal(msg);
+        });
+        
+        </script>
+
+        @*PopErrorFunction*@
+
+        <script type="text/javascript">
+        
+        function openErrorModal(strMessage) 
+        {
+            var myDiv= document.getElementById("MyModelErrorAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#errorPopup').modal('show');
+        }
+
+        $(document).ready(function()
+        {
+            var msg= "@TempData["ErrorMessage"]";
+            if(msg)
+            openErrorModal(msg);
+        });
+        
+        </script>
+
+
+}
