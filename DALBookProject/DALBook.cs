@@ -132,6 +132,44 @@ namespace DALBookProject
             return updatedBook;
         }
 
+        public BookModel CreateOrUpdateBook(BookModel bookModel)
+        {
+            try
+            {
+                using (var db = new BookDbContext(BookDbContext.ops.dbOptions))
+                {
+                    var book = db.Books.FirstOrDefault(b => b.bookid == bookModel.BookId);
+
+                    if (book == null)
+                    {
+                        book = new BOOK();
+                        db.Books.Add(book);
+                    }
+
+                    book.bookid = bookModel.BookId;
+                    book.bookname = bookModel.BookName;
+                    book.categoryid = bookModel.CategoryId;
+                    book.author = bookModel.Author;
+                    book.publisher = bookModel.Publisher;
+                    book.price = bookModel.Price;
+
+                    db.SaveChanges();
+
+                    // Set the BookId property of the input object to the ID of the newly created or updated book
+                    bookModel.BookId = book.bookid;
+                }
+
+            }
+            catch
+            {
+                // Handle any exceptions
+            }
+
+            // Return the input object
+            return bookModel;
+        }
+
+
 
         public Boolean DeleteBook(BookModel bookModel)
         {

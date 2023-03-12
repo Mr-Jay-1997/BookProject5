@@ -36,109 +36,175 @@ namespace BookProject.Controllers
             return PartialView("_DetailsPartialView", book);
         }
 
-        public IActionResult Create()
-        {
-            using (var db = new BookDbContext(BookDbContext.ops.dbOptions))
-            {
-                var bookModel = new BookModel();
-                //BLLCategory bLLCategory = new BLLCategory();
-                ViewBag.Categories = GetCategories();
+        //public IActionResult Create()
+        //{
+        //    using (var db = new BookDbContext(BookDbContext.ops.dbOptions))
+        //    {
+        //        var bookModel = new BookModel();
+        //        //BLLCategory bLLCategory = new BLLCategory();
+        //        ViewBag.Categories = GetCategories();
 
-                return View(bookModel);
+        //        return View(bookModel);
+        //    }
+        //}
+
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public IActionResult Create(BookModel bookModel)
+        //{
+        //    bool check = false;
+        //    string ErrMessage = "";
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            if (bllbook.IsBookExists(bookModel.BookName) == true)
+        //            {
+        //                ErrMessage = ErrMessage + " Book " + bookModel.BookName + " already Exists!!!";
+        //            }
+        //            if (ErrMessage == "")
+        //            {
+        //                bookModel = bllbook.CreateBook(bookModel);
+        //                check = true;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            TempData["ErrorMessage"] = "Value cannot be empty";
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        TempData["ErrorMessage"] = "Book " + bookModel.BookName + " failed to create";
+        //    }
+        //    if(check == false)
+        //    {
+        //        TempData["ErrorMessage"] = ErrMessage;
+        //        ModelState.AddModelError("", ErrMessage);
+        //        //return PartialView("_CreatePartialView", categoryModel);
+        //    }
+        //    else
+        //    {
+        //        TempData["SuccessMessage"] = "Book " + bookModel.BookName + " Created Successfully";  
+        //    }
+        //    return RedirectToAction(nameof(Index));
+        //    //return View(bookModel);
+
+        //}
+
+        //public IActionResult Edit(int id)
+        //{
+        //    //BLLCategory bLLCategory = new BLLCategory();
+
+        //    BookModel updatedBook = new BookModel();
+        //    updatedBook = bllbook.GetBook(id);
+        //    ViewBag.Categories = GetCategories();
+        //    ViewBag.Categories = GetCategories();
+        //   // updatedBook.Selected = updatedBook.CategoryId;
+        //    return View(updatedBook);
+        //}
+
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public IActionResult Edit(int bookId, BookModel updatedBook)
+        //{
+        //    bool check = false;
+        //    string ErrMessage = "";
+        //    ViewBag.Categories = GetCategories();
+        //    try
+        //    {
+        //        if (bllbook.IsBookExists(updatedBook.BookName, updatedBook.BookId) == true)
+        //        {
+        //            ErrMessage = "Book " + updatedBook.BookName + " already Exists!!!";
+        //        }
+        //        if (ErrMessage == "")
+        //        {
+        //            updatedBook = bllbook.UpdateBook(bookId, updatedBook);
+        //            TempData["SuccessMessage"] = "Book " + updatedBook.BookName + " Saved Successfully";
+        //            check= true;
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        ErrMessage = ErrMessage + "" + ex.Message;
+        //        TempData["ErrorMessage"] = "Book " + updatedBook.BookName + " not Updated";
+        //    }
+        //    if (check == false)
+        //    {
+        //        TempData["ErrorMessage"] = ErrMessage;
+        //        ModelState.AddModelError("", ErrMessage);
+        //    }
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        [HttpGet]
+        public IActionResult CreateOrUpdateBook(int? id)
+        {
+            
+            ViewBag.Categories = GetCategories();
+            // If an id is provided, retrieve the book by id
+            if (id.HasValue)
+            {
+                var book = bllbook.GetBook(id.Value);
+                if (book == null)
+                {
+                    return NotFound();
+                }
+                return View(book);
             }
+
+            // If no id is provided, create a new book model
+            var newBook = new BookModel();
+            return View(newBook);
         }
 
+
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public IActionResult Create(BookModel bookModel)
+        public IActionResult CreateOrUpdateBook(BookModel bookModel)
         {
             bool check = false;
             string ErrMessage = "";
-            try
+            ViewBag.Categories = GetCategories();
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                try
                 {
                     if (bllbook.IsBookExists(bookModel.BookName) == true)
                     {
-                        ErrMessage = ErrMessage + " Book " + bookModel.BookName + " already Exists!!!";
+                        ErrMessage = "Book " + bookModel.BookName + " already Exists!!!";
                     }
                     if (ErrMessage == "")
                     {
-                        bookModel = bllbook.CreateBook(bookModel);
-                        check = true;
+                        var result = bllbook.CreateOrUpdateBook(bookModel);
+                        if (result != null)
+                        {
+                            TempData["SuccessMessage"] = "Book " + bookModel.BookName + " saved Succesfully";
+                            check= true;
+                            //return RedirectToAction("Index", "Book");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "Book " + bookModel.BookName + " failed to save";
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = "Value cannot be empty";
+                    ErrMessage = ErrMessage + "" + ex.Message;
+                    TempData["ErrorMessage"] = "Book " + bookModel.BookName + " not saved";
                 }
-            }
-            catch
-            {
-                TempData["ErrorMessage"] = "Book " + bookModel.BookName + " failed to create";
-            }
-            if(check == false)
-            {
+                if (check == false)
+                {
                 TempData["ErrorMessage"] = ErrMessage;
                 ModelState.AddModelError("", ErrMessage);
-                //return PartialView("_CreatePartialView", categoryModel);
-            }
-            else
-            {
-                TempData["SuccessMessage"] = "Book " + bookModel.BookName + " Created Successfully";  
-            }
-            return RedirectToAction(nameof(Index));
-            //return View(bookModel);
-
-        }
-
-        public IActionResult Edit(int id)
-        {
-            //BLLCategory bLLCategory = new BLLCategory();
-
-            BookModel updatedBook = new BookModel();
-            updatedBook = bllbook.GetBook(id);
-            ViewBag.Categories = GetCategories();
-            ViewBag.Categories = GetCategories();
-           // updatedBook.Selected = updatedBook.CategoryId;
-            return View(updatedBook);
-        }
-
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public IActionResult Edit(int bookId, BookModel updatedBook)
-        {
-            bool check = false;
-            string ErrMessage = "";
-            ViewBag.Categories = GetCategories();
-            try
-            {
-                
-                if (bllbook.IsBookExists(updatedBook.BookName, updatedBook.BookId) == true)
-                {
-                    ErrMessage = "Book " + updatedBook.BookName + " already Exists!!!";
                 }
-                if (ErrMessage == "")
-                {
-                    updatedBook = bllbook.UpdateBook(bookId, updatedBook);
-                    TempData["SuccessMessage"] = "Book " + updatedBook.BookName + " Saved Successfully";
-                    check= true;
-                }
-            }
-            catch(Exception ex)
-            {
-                ErrMessage = ErrMessage + "" + ex.Message;
-                TempData["ErrorMessage"] = "Book " + updatedBook.BookName + " not Updated";
+                return RedirectToAction(nameof(Index));
 
             }
-            if (check == false)
-            {
-                TempData["ErrorMessage"] = ErrMessage;
-                ModelState.AddModelError("", ErrMessage);
-                //return PartialView("_CreatePartialView", categoryModel);
-            }
-            return RedirectToAction(nameof(Index));
+            return View(bookModel);
         }
+
+
 
         public IActionResult Delete(int id)
         {
@@ -149,12 +215,10 @@ namespace BookProject.Controllers
         }
 
         [HttpPost]
-        
         public IActionResult Delete(BookModel bookModel)
         {
             try
             {
-                
                 if (ModelState.IsValid)
                 {
                     var result = bllbook.DeleteBook(bookModel);

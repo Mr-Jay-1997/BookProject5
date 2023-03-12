@@ -32,7 +32,13 @@ namespace BLLBookProject
             return dalbook.UpdateBook(bookId, updatedBook);
         }
 
-        
+        public BookModel CreateOrUpdateBook(BookModel bookModel)
+        {
+            return dalbook.CreateOrUpdateBook(bookModel);
+        }
+
+
+
         public Boolean DeleteBook(BookModel bookModel)
         {
             var result = dalbook.DeleteBook(bookModel);

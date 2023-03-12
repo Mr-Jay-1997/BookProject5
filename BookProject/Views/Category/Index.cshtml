@@ -49,8 +49,8 @@ else
             </td>
             
             <td>
-                    <button type="button" asp-action="Edit" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="@("#editPartial-" +item.CategoryId)" data-url="@Url.Action($"Edit/{item.CategoryId}")"> <i class="fas fa-edit"></i> Edit </button>
-                    @await Html.PartialAsync("_EditPartialView",item)
+                   @* <button type="button" asp-action="Edit" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="@("#editPartial-" +item.CategoryId)" data-url="@Url.Action($"Edit/{item.CategoryId}")"> <i class="fas fa-edit"></i> Edit </button>
+                    @await Html.PartialAsync("_EditPartialView",item)*@
 
                     <button type="button" asp-action="Delete" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="@("#deletePartial-" +item.CategoryId)" data-url="@Url.Action($"Delete/{item.CategoryId}")"> <i class="fas fa-trash-alt"></i> Delete </button>
                     @await Html.PartialAsync("_DeletePartialView",item)
