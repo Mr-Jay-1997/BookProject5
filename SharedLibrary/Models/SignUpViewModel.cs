@@ -20,7 +20,7 @@ namespace BookProject.Models
 
 
         [Required(ErrorMessage = "Please enter Email")]
-        [Remote(action:"IsUserExist",controller: "Account")]
+        //[Remote(action:"IsUserExist",controller: "Account")]
         public string Email { get; set; }
         
         [Required(ErrorMessage = "Please enter Password")]
